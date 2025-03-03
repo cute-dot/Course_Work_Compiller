@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Menu -->
+    <system:String x:Key="FileMenu">File</system:String>
+    <system:String x:Key="EditMenu">Edit</system:String>
+    <system:String x:Key="ToolsMenu">Tools</system:String>
+    <system:String x:Key="HelpMenu">Help</system:String>
+
+    <!-- File -->
+    <system:String x:Key="NewFile">New</system:String>
+    <system:String x:Key="OpenFile">Open</system:String>
+    <system:String x:Key="SaveFile">Save</system:String>
+    <system:String x:Key="Exit">Exit</system:String>
+
+    <!-- Edit -->
+    <system:String x:Key="Undo">Undo</system:String>
+    <system:String x:Key="Redo">Redo</system:String>
+    <system:String x:Key="Copy">Copy</system:String>
+    <system:String x:Key="Cut">Cut</system:String>
+    <system:String x:Key="Paste">Paste</system:String>
+
+    <!-- Tools -->
+    <system:String x:Key="AnalyzeText">Analyze Text</system:String>
+
+    <!-- Help -->
+    <system:String x:Key="UserGuide">User Guide</system:String>
+    <system:String x:Key="About">About</system:String>
+
+    <!-- Toolbar -->
+    <system:String x:Key="ToolbarNew">New</system:String>
+    <system:String x:Key="ToolbarOpen">Open</system:String>
+    <system:String x:Key="ToolbarSave">Save</system:String>
+    <system:String x:Key="ToolbarUndo">Undo</system:String>
+    <system:String x:Key="ToolbarRedo">Redo</system:String>
+    <system:String x:Key="ToolbarCopy">Copy</system:String>
+    <system:String x:Key="ToolbarCut">Cut</system:String>
+    <system:String x:Key="ToolbarPaste">Paste</system:String>
+    <system:String x:Key="ToolbarAnalyze">Analyze</system:String>
+
+</ResourceDictionary>

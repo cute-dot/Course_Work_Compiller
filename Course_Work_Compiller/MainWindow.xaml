@@ -1,0 +1,172 @@
+﻿<Window x:Class="Course_Work_Compiller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Course_Work_Compiller"
+        mc:Ignorable="d"
+        Title="Компилятор" Height="450" Width="800">
+    
+    <Window.Resources>
+        <!-- Стиль меню -->
+        <Style TargetType="MenuItem">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Стиль кнопок на тулбаре -->
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="130"/>
+            <Setter Property="MinWidth" Value="120"/>  <!-- Минимальная ширина -->
+            <Setter Property="MinHeight" Value="120"/> <!-- Минимальная высота -->
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Image">
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="MinWidth" Value="25"/>  <!-- Минимальная ширина изображения -->
+            <Setter Property="MinHeight" Value="25"/> <!-- Минимальная высота изображения -->
+        </Style>
+
+    </Window.Resources>
+    
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{DynamicResource FileMenu}">
+                <MenuItem Header="{DynamicResource NewFile}" Icon="images/write.png" Click="NewFile_Click" />
+                <MenuItem Header="{DynamicResource OpenFile}" Click="OpenFile_Click" />
+                <MenuItem Header="{DynamicResource SaveFile}" Click="SaveFile_Click" />
+                <Separator />
+                <MenuItem Header="{DynamicResource Exit}" Click="Exit_Click" />
+            </MenuItem>
+            <MenuItem Header="{DynamicResource EditMenu}">
+                <MenuItem Header="{DynamicResource Undo}" Click="Undo_Click" />
+                <MenuItem Header="{DynamicResource Redo}" Click="Redo_Click" />
+                <Separator />
+                <MenuItem Header="{DynamicResource Copy}" Click="Copy_Click" />
+                <MenuItem Header="{DynamicResource Cut}" Click="Cut_Click" />
+                <MenuItem Header="{DynamicResource Paste}" Click="Paste_Click" />
+            </MenuItem>
+            <MenuItem Header="{DynamicResource ToolsMenu}">
+                <MenuItem Header="{DynamicResource AnalyzeText}" Click="AnalyzeText_Click" />
+            </MenuItem>
+            <MenuItem Header="{DynamicResource HelpMenu}">
+                <MenuItem Header="{DynamicResource UserGuide}" Click="Help_Click" />
+                <MenuItem Header="{DynamicResource About}" Click="About_Click" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Панель инструментов -->
+        <ToolBar DockPanel.Dock="Top">
+            <Button Click="NewFile_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/write.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarNew}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="OpenFile_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/open.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarOpen}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="SaveFile_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/save.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarSave}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="Undo_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/back.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarUndo}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="Redo_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/forward.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarRedo}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="Copy_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="Images/collection.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarCopy}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="Cut_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/scissors.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarCut}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="Paste_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/documents.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarPaste}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Separator />
+            <Button Click="AnalyzeText_Click">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="images/analyzing.png" Width="24" Height="24" />
+                    <TextBlock Text="{DynamicResource ToolbarAnalyze}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <ComboBox x:Name="FontSizeComboBox" Width="80" VerticalAlignment="Top" Margin="5"
+                      SelectedItem="14" SelectionChanged="FontSizeComboBox_SelectionChanged">
+                <ComboBoxItem Content="10" />
+                <ComboBoxItem Content="12" />
+                <ComboBoxItem Content="14" />
+                <ComboBoxItem Content="16" />
+                <ComboBoxItem Content="18" />
+                <ComboBoxItem Content="20" />
+                <ComboBoxItem Content="22" />
+            </ComboBox>
+            <ComboBox x:Name="LanguageComboBox" Width="80" VerticalAlignment="Top" Margin="5" SelectionChanged="LanguageComboBox_SelectionChanged">
+                <ComboBoxItem Content="Русский" Tag="ru" IsSelected="True"/>
+                <ComboBoxItem Content="English" Tag="en"/>
+            </ComboBox>
+        </ToolBar>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            
+            
+            <Grid Grid.Row="0" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Name="LineNumberScroller">
+                    <TextBox x:Name="LineNumbers" IsReadOnly="True" TextWrapping="NoWrap" Background="LightGray" FontSize="14"/>
+                </ScrollViewer>
+                <RichTextBox AllowDrop="True" AcceptsTab="True" x:Name="TextEditor" Grid.Column="1" Margin="0" BorderBrush="Black" BorderThickness="1" FontSize="14" VerticalScrollBarVisibility="Auto" TextChanged="InputFirst_TextChanged" ScrollViewer.ScrollChanged="InputFirst_ScrollChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="Paragraph">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+            </Grid>
+            
+            <TextBox x:Name="ResultsArea" Grid.Row="1" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#F0F0F0" />
+        </Grid>
+    </DockPanel>
+</Window>

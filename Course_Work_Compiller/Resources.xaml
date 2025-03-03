@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Меню -->
+    <system:String x:Key="FileMenu">Файл</system:String>
+    <system:String x:Key="EditMenu">Правка</system:String>
+    <system:String x:Key="ToolsMenu">Инструменты</system:String>
+    <system:String x:Key="HelpMenu">Справка</system:String>
+
+    <!-- Файл -->
+    <system:String x:Key="NewFile">Создать</system:String>
+    <system:String x:Key="OpenFile">Открыть</system:String>
+    <system:String x:Key="SaveFile">Сохранить</system:String>
+    <system:String x:Key="Exit">Выход</system:String>
+
+    <!-- Правка -->
+    <system:String x:Key="Undo">Отменить</system:String>
+    <system:String x:Key="Redo">Повторить</system:String>
+    <system:String x:Key="Copy">Копировать</system:String>
+    <system:String x:Key="Cut">Вырезать</system:String>
+    <system:String x:Key="Paste">Вставить</system:String>
+
+    <!-- Инструменты -->
+    <system:String x:Key="AnalyzeText">Анализ текста</system:String>
+
+    <!-- Справка -->
+    <system:String x:Key="UserGuide">Руководство пользователя</system:String>
+    <system:String x:Key="About">О программе</system:String>
+
+    <!-- Панель инструментов -->
+    <system:String x:Key="ToolbarNew">Создать</system:String>
+    <system:String x:Key="ToolbarOpen">Открыть</system:String>
+    <system:String x:Key="ToolbarSave">Сохранить</system:String>
+    <system:String x:Key="ToolbarUndo">Отменить</system:String>
+    <system:String x:Key="ToolbarRedo">Повторить</system:String>
+    <system:String x:Key="ToolbarCopy">Копировать</system:String>
+    <system:String x:Key="ToolbarCut">Вырезать</system:String>
+    <system:String x:Key="ToolbarPaste">Вставить</system:String>
+    <system:String x:Key="ToolbarAnalyze">Анализ</system:String>
+
+</ResourceDictionary>

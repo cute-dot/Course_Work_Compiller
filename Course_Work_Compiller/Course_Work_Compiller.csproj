@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="images\write.png" />
+      <Resource Include="images\write.png" />
+      <None Remove="images\analyzing.png" />
+      <Resource Include="images\analyzing.png" />
+      <None Remove="images\back.png" />
+      <Resource Include="images\back.png" />
+      <None Remove="images\collection.png" />
+      <Resource Include="images\collection.png" />
+      <None Remove="images\documents.png" />
+      <Resource Include="images\documents.png" />
+      <None Remove="images\forward.png" />
+      <Resource Include="images\forward.png" />
+      <None Remove="images\open.png" />
+      <Resource Include="images\open.png" />
+      <None Remove="images\save.png" />
+      <Resource Include="images\save.png" />
+      <None Remove="images\scissors.png" />
+      <Resource Include="images\scissors.png" />
+      <Page Remove="ResourcesEN.xaml" />
+      <Resource Include="ResourcesEN.xaml" />
+      <Page Remove="Resources.xaml" />
+      <Resource Include="Resources.xaml" />
+    </ItemGroup>
+
+</Project>
