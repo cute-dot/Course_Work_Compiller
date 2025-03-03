@@ -35,8 +35,8 @@
 
     </Window.Resources>
     
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+    <DockPanel Background="#D3D3D3">
+        <Menu Background="#D3D3D3" DockPanel.Dock="Top">
             <MenuItem Header="{DynamicResource FileMenu}">
                 <MenuItem Header="{DynamicResource NewFile}" Icon="images/write.png" Click="NewFile_Click" />
                 <MenuItem Header="{DynamicResource OpenFile}" Click="OpenFile_Click" />
@@ -62,7 +62,7 @@
         </Menu>
 
         <!-- Панель инструментов -->
-        <ToolBar DockPanel.Dock="Top">
+        <ToolBar Background="#E0E0E0" DockPanel.Dock="Top">
             <Button Click="NewFile_Click">
                 <StackPanel Orientation="Vertical">
                     <Image Source="images/write.png" Width="24" Height="24" />
@@ -70,14 +70,14 @@
                 </StackPanel>
             </Button>
             <Separator />
-            <Button Click="OpenFile_Click">
+            <Button Command="local:MainWindow.OpenFileCommand" Click="OpenFile_Click">
                 <StackPanel Orientation="Vertical">
                     <Image Source="images/open.png" Width="24" Height="24" />
                     <TextBlock Text="{DynamicResource ToolbarOpen}" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Separator />
-            <Button Click="SaveFile_Click">
+            <Button Command="local:MainWindow.SaveFileCommand" Click="SaveFile_Click">
                 <StackPanel Orientation="Vertical">
                     <Image Source="images/save.png" Width="24" Height="24" />
                     <TextBlock Text="{DynamicResource ToolbarSave}" HorizontalAlignment="Center" />
@@ -119,7 +119,7 @@
                 </StackPanel>
             </Button>
             <Separator />
-            <Button Click="AnalyzeText_Click">
+            <Button Command="local:MainWindow.AnalyzeTextCommand" Click="AnalyzeText_Click">
                 <StackPanel Orientation="Vertical">
                     <Image Source="images/analyzing.png" Width="24" Height="24" />
                     <TextBlock Text="{DynamicResource ToolbarAnalyze}" HorizontalAlignment="Center" />
@@ -141,23 +141,22 @@
             </ComboBox>
         </ToolBar>
         
-        <Grid>
+        <Grid Background="#D3D3D3">
             <Grid.RowDefinitions>
-                <RowDefinition Height="3*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="2*" MinHeight="100"/>
+                <RowDefinition Height="5" /> <!-- GridSplitter -->
+                <RowDefinition Height="*" MinHeight="50"/>
             </Grid.RowDefinitions>
-            
-            
-            
-            <Grid Grid.Row="0" Margin="5">
+    
+            <Grid Grid.Row="0" Margin="5" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition  Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Name="LineNumberScroller">
+                <ScrollViewer  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Name="LineNumberScroller">
                     <TextBox x:Name="LineNumbers" IsReadOnly="True" TextWrapping="NoWrap" Background="LightGray" FontSize="14"/>
                 </ScrollViewer>
-                <RichTextBox AllowDrop="True" AcceptsTab="True" x:Name="TextEditor" Grid.Column="1" Margin="0" BorderBrush="Black" BorderThickness="1" FontSize="14" VerticalScrollBarVisibility="Auto" TextChanged="InputFirst_TextChanged" ScrollViewer.ScrollChanged="InputFirst_ScrollChanged">
+                <RichTextBox Background="LightGray" AllowDrop="True" AcceptsTab="True" x:Name="TextEditor" Grid.Column="1" Margin="0"  FontSize="14" VerticalScrollBarVisibility="Auto" TextChanged="InputFirst_TextChanged" ScrollViewer.ScrollChanged="InputFirst_ScrollChanged">
                     <RichTextBox.Resources>
                         <Style TargetType="Paragraph">
                             <Setter Property="Margin" Value="0"/>
@@ -165,8 +164,12 @@
                     </RichTextBox.Resources>
                 </RichTextBox>
             </Grid>
-            
-            <TextBox x:Name="ResultsArea" Grid.Row="1" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="#F0F0F0" />
+
+            <!-- Разделитель для изменения размеров окон -->
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="Gray"/>
+
+            <TextBox x:Name="ResultsArea" Grid.Row="2" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="DarkGray"/>
         </Grid>
+
     </DockPanel>
 </Window>

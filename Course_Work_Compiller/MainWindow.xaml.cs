@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,12 +24,94 @@ namespace Course_Work_Compiller
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool isUpdating = false;
+        public static readonly RoutedCommand OpenFileCommand = new RoutedCommand();
+        public static readonly RoutedCommand SaveFileCommand = new RoutedCommand();
+        public static readonly RoutedCommand AnalyzeTextCommand = new RoutedCommand();
         public MainWindow()
         {
+            
             InitializeComponent();
+            CommandBindings.Add(new CommandBinding(OpenFileCommand, OpenFile_Click));
+            CommandBindings.Add(new CommandBinding(SaveFileCommand, SaveFile_Click));
+            CommandBindings.Add(new CommandBinding(AnalyzeTextCommand, AnalyzeText_Click));
+            
+            
+            
             TextEditor.AddHandler(RichTextBox.DragOverEvent, new DragEventHandler(RichTextBox_DragOver), true);
             TextEditor.AddHandler(RichTextBox.DropEvent, new DragEventHandler(RichTextBox_Drop), true);
+            TextEditor.TextChanged += TextEditor_TextChanged;
+            
+            InputBindings.Add(new KeyBinding(OpenFileCommand, Key.O, ModifierKeys.Control));
+            InputBindings.Add(new KeyBinding(SaveFileCommand, Key.S, ModifierKeys.Control));
+            InputBindings.Add(new KeyBinding(AnalyzeTextCommand, Key.F5, ModifierKeys.None));
+            
+            
         }
+        
+         private void TextEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (isUpdating) return; // Предотвращаем повторный вызов
+
+            isUpdating = true;
+            HighlightSyntax(TextEditor);
+            isUpdating = false;
+            
+            
+        }
+
+        private void HighlightSyntax(RichTextBox richTextBox)
+        {
+            TextRange textRange = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
+            string text = textRange.Text;
+
+            // Очищаем стили только один раз
+            textRange.ClearAllProperties();
+
+            // Вызываем подсветку
+            HighlightWord(richTextBox, @"\b(fun|return)\b", Brushes.Blue);
+            HighlightWord(richTextBox, @"\b(Int|Double|String|Boolean)\b", Brushes.DarkCyan);
+            HighlightWord(richTextBox, @"\b\d+\b", Brushes.DarkOrange);
+            HighlightWord(richTextBox, @"(\"".*?\"")", Brushes.Green);
+        }
+
+        private void HighlightWord(RichTextBox richTextBox, string pattern, Brush color)
+        {
+            TextRange textRange = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
+            string text = textRange.Text;
+
+            foreach (Match match in Regex.Matches(text, pattern))
+            {
+                TextPointer start = richTextBox.Document.ContentStart;
+                TextPointer current = start;
+
+                while (current != null)
+                {
+                    if (current.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                    {
+                        string runText = current.GetTextInRun(LogicalDirection.Forward);
+
+                        int index = runText.IndexOf(match.Value);
+                        if (index >= 0)
+                        {
+                            TextPointer selectionStart = current.GetPositionAtOffset(index);
+                            TextPointer selectionEnd = selectionStart?.GetPositionAtOffset(match.Value.Length);
+
+                            if (selectionStart != null && selectionEnd != null)
+                            {
+                                TextRange selection = new TextRange(selectionStart, selectionEnd);
+                                selection.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+                            }
+                        }
+                    }
+                    current = current.GetNextContextPosition(LogicalDirection.Forward);
+                }
+            }
+        }
+        
+        
+        
+        
         private void RichTextBox_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
