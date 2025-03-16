@@ -20,9 +20,15 @@
 //         {
 //             char current = input[pos];
 //
-//             // Пропуск пробелов
+//             // Обработка пробелов (code 7)
 //             if (char.IsWhiteSpace(current))
 //             {
+//                 tokens.Add(new Token { 
+//                     Code = 7,
+//                     Type = "Разделитель",
+//                     Lexeme = " ",
+//                     Position = $"{pos + 1}"
+//                 });
 //                 pos++;
 //                 continue;
 //             }
@@ -31,7 +37,7 @@
 //             if (char.IsLetter(current))
 //             {
 //                 int start = pos;
-//                 while (pos < input.Length && (char.IsLetterOrDigit(input[pos]) || input[pos] == '_') )
+//                 while (pos < input.Length && (char.IsLetterOrDigit(input[pos]) || input[pos] == '_'))
 //                     pos++;
 //
 //                 string value = input.Substring(start, pos - start);
@@ -56,9 +62,19 @@
 //                 continue;
 //             }
 //
-//             // Разделители и символы
+//             // Операторы и символы
 //             switch (current)
 //             {
+//                 case '+':
+//                 case '-':
+//                 case '*':
+//                     tokens.Add(new Token { 
+//                         Code = 16, 
+//                         Type = "Оператор", 
+//                         Lexeme = current.ToString(), 
+//                         Position = $"{pos + 1}" 
+//                     });
+//                     break;
 //                 case '(':
 //                     tokens.Add(new Token { Code = 9, Type = "Начало параметров", Lexeme = "(", Position = $"{pos + 1}" });
 //                     break;
@@ -81,15 +97,12 @@
 //                     tokens.Add(new Token { Code = 14, Type = "Конец объявления", Lexeme = ";", Position = $"{pos + 1}" });
 //                     break;
 //                 default:
-//                     if (!char.IsWhiteSpace(current))
-//                     {
-//                         tokens.Add(new Token { 
-//                             Code = 15, 
-//                             Type = "Ошибка", 
-//                             Lexeme = current.ToString(), 
-//                             Position = $"{pos + 1}" 
-//                         });
-//                     }
+//                     tokens.Add(new Token { 
+//                         Code = 15, 
+//                         Type = "Ошибка", 
+//                         Lexeme = current.ToString(), 
+//                         Position = $"{pos + 1}" 
+//                     });
 //                     break;
 //             }
 //             pos++;
@@ -98,7 +111,6 @@
 //         return tokens;
 //     }
 // }
-
 
 using System.Collections.Generic;
 
@@ -122,15 +134,19 @@ public class Lexer
         {
             char current = input[pos];
 
-            // Обработка пробелов (code 7)
+            // Пропуск пробелов, если они не значимые
             if (char.IsWhiteSpace(current))
             {
-                tokens.Add(new Token { 
-                    Code = 7,
-                    Type = "Разделитель",
-                    Lexeme = " ",
-                    Position = $"{pos + 1}"
-                });
+                // Проверяем, является ли следующий символ значимым
+                if (pos + 1 < input.Length && !char.IsWhiteSpace(input[pos + 1]))
+                {
+                    tokens.Add(new Token { 
+                        Code = 7,
+                        Type = "Разделитель",
+                        Lexeme = " ",
+                        Position = $"{pos + 1}"
+                    });
+                }
                 pos++;
                 continue;
             }

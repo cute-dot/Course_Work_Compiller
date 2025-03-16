@@ -19,4 +19,3 @@ C:\Users\sasha\RiderProjects\Course_Work_Compiller\Course_Work_Compiller\obj\Deb
 C:\Users\sasha\RiderProjects\Course_Work_Compiller\Course_Work_Compiller\obj\Debug\net7.0-windows\Course_Work_Compiller.genruntimeconfig.cache
 C:\Users\sasha\RiderProjects\Course_Work_Compiller\Course_Work_Compiller\obj\Debug\net7.0-windows\ref\Course_Work_Compiller.dll
 C:\Users\sasha\RiderProjects\Course_Work_Compiller\Course_Work_Compiller\obj\Debug\net7.0-windows\App.baml
-C:\Users\sasha\RiderProjects\Course_Work_Compiller\Course_Work_Compiller\obj\Debug\net7.0-windows\Course_Work_Compiller.csproj.AssemblyReference.cache
