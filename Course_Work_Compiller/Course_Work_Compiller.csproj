@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="images\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="images\write.png" />
       <Resource Include="images\write.png" />
       <None Remove="images\analyzing.png" />
@@ -34,6 +30,8 @@
       <Resource Include="ResourcesEN.xaml" />
       <Page Remove="Resources.xaml" />
       <Resource Include="Resources.xaml" />
+      <None Remove="images\play.png" />
+      <Resource Include="images\play.png" />
     </ItemGroup>
 
 </Project>

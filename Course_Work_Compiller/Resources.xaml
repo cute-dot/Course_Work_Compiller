@@ -12,6 +12,7 @@
     <system:String x:Key="NewFile">Создать</system:String>
     <system:String x:Key="OpenFile">Открыть</system:String>
     <system:String x:Key="SaveFile">Сохранить</system:String>
+    <system:String x:Key="SaveAsFile">Сохранить как</system:String>
     <system:String x:Key="Exit">Выход</system:String>
 
     <!-- Правка -->
@@ -22,7 +23,7 @@
     <system:String x:Key="Paste">Вставить</system:String>
 
     <!-- Инструменты -->
-    <system:String x:Key="AnalyzeText">Анализ текста</system:String>
+    <system:String x:Key="AnalyzeText">Пуск</system:String>
 
     <!-- Справка -->
     <system:String x:Key="UserGuide">Руководство пользователя</system:String>
@@ -32,11 +33,12 @@
     <system:String x:Key="ToolbarNew">Создать</system:String>
     <system:String x:Key="ToolbarOpen">Открыть</system:String>
     <system:String x:Key="ToolbarSave">Сохранить</system:String>
+    <system:String x:Key="ToolbarSaveAs">Сохранить как</system:String>
     <system:String x:Key="ToolbarUndo">Отменить</system:String>
     <system:String x:Key="ToolbarRedo">Повторить</system:String>
     <system:String x:Key="ToolbarCopy">Копировать</system:String>
     <system:String x:Key="ToolbarCut">Вырезать</system:String>
     <system:String x:Key="ToolbarPaste">Вставить</system:String>
-    <system:String x:Key="ToolbarAnalyze">Анализ</system:String>
+    <system:String x:Key="ToolbarAnalyze">Пуск</system:String>
 
 </ResourceDictionary>

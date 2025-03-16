@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Course_Work_Compiller.models;
 using Microsoft.Win32;
 using Path = System.IO.Path;
 
@@ -22,9 +18,12 @@ namespace Course_Work_Compiller
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private bool isUpdating = false;
+        private string _currentFilePath = null;
+        private bool _isModified = false;
+        
+        private bool _isUpdating = false;
         public static readonly RoutedCommand OpenFileCommand = new RoutedCommand();
         public static readonly RoutedCommand SaveFileCommand = new RoutedCommand();
         public static readonly RoutedCommand AnalyzeTextCommand = new RoutedCommand();
@@ -51,11 +50,11 @@ namespace Course_Work_Compiller
         
          private void TextEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (isUpdating) return; // Предотвращаем повторный вызов
+            if (_isUpdating) return; // Предотвращаем повторный вызов
 
-            isUpdating = true;
+            _isUpdating = true;
             HighlightSyntax(TextEditor);
-            isUpdating = false;
+            _isUpdating = false;
             
             
         }
@@ -91,11 +90,11 @@ namespace Course_Work_Compiller
                     {
                         string runText = current.GetTextInRun(LogicalDirection.Forward);
 
-                        int index = runText.IndexOf(match.Value);
+                        int index = runText.IndexOf(match.Value, StringComparison.Ordinal);
                         if (index >= 0)
                         {
-                            TextPointer selectionStart = current.GetPositionAtOffset(index);
-                            TextPointer selectionEnd = selectionStart?.GetPositionAtOffset(match.Value.Length);
+                            TextPointer selectionStart = current.GetPositionAtOffset(index) ?? throw new InvalidOperationException();
+                            TextPointer selectionEnd = selectionStart?.GetPositionAtOffset(match.Value.Length) ?? throw new InvalidOperationException();
 
                             if (selectionStart != null && selectionEnd != null)
                             {
@@ -109,7 +108,31 @@ namespace Course_Work_Compiller
             }
         }
         
-        
+        private bool ConfirmSaveChanges()
+        {
+            Console.WriteLine(_isModified);
+            if (_isModified == false) return true; // Если изменений нет, просто продолжаем
+
+            // Показываем MessageBox
+            MessageBoxResult result = MessageBox.Show(
+                "Вы хотите сохранить изменения?",
+                "Сохранение",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Warning
+            );
+
+            if (result == MessageBoxResult.Yes)
+            {
+                SaveFile_Click(null, null); // Вызываем метод сохранения
+                return true; // Разрешаем продолжение работы
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                return true; // Просто продолжаем без сохранения
+            }
+
+            return false; // Отмена операции
+        }
         
         
         private void RichTextBox_DragOver(object sender, DragEventArgs e)
@@ -161,23 +184,27 @@ namespace Course_Work_Compiller
 
         private void NewFile_Click(object sender, RoutedEventArgs e)
         {
+            if (!ConfirmSaveChanges()) return;
+            _isModified = false;
             TextEditor.Document.Blocks.Clear();;
-            ResultsArea.Clear();
+            // ResultsArea.D;
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
+            if (!ConfirmSaveChanges()) return;
+            _isModified = false;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Rich Text Format (*.rtf)|*.rtf|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+                Filter = "Rich Text Format (*.txt)|*.txt|All Files (*.*)|*.*"
             };
-
+            
             if (openFileDialog.ShowDialog() == true)
             {
                 using (FileStream fileStream = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read))
                 {
                     TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
-
+                    _currentFilePath = openFileDialog.FileName;
                     if (Path.GetExtension(openFileDialog.FileName).ToLower() == ".rtf")
                     {
                         range.Load(fileStream, DataFormats.Rtf);
@@ -190,30 +217,88 @@ namespace Course_Work_Compiller
             }
         }
 
+        // private void SaveFile_Click(object sender, RoutedEventArgs e)
+        // {
+        //     SaveFileDialog saveFileDialog = new SaveFileDialog
+        //     {
+        //         Filter = "Rich Text Format (*.rtf)|*.rtf|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        //     };
+        //
+        //     if (saveFileDialog.ShowDialog() == true)
+        //     {
+        //         using (FileStream fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create, FileAccess.Write))
+        //         {
+        //             TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
+        //
+        //             if (Path.GetExtension(saveFileDialog.FileName).ToLower() == ".rtf")
+        //             {
+        //                 range.Save(fileStream, DataFormats.Rtf);
+        //             }
+        //             else
+        //             {
+        //                 range.Save(fileStream, DataFormats.Text);
+        //             }
+        //         }
+        //     }
+        // }
         private void SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentFilePath))
+            {
+                SaveFileAs();
+            }
+            else
+            {
+                SaveToFile(_currentFilePath);
+            }
+        }
+
+        // Метод "Сохранить как"
+        private void SaveFileAs_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileAs();
+        }
+
+        // Открытие диалога "Сохранить как"
+        private void SaveFileAs()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = "Rich Text Format (*.rtf)|*.rtf|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+                Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*",
+                Title = "Сохранить как"
             };
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                using (FileStream fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create, FileAccess.Write))
-                {
-                    TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
-
-                    if (Path.GetExtension(saveFileDialog.FileName).ToLower() == ".rtf")
-                    {
-                        range.Save(fileStream, DataFormats.Rtf);
-                    }
-                    else
-                    {
-                        range.Save(fileStream, DataFormats.Text);
-                    }
-                }
+                _currentFilePath = saveFileDialog.FileName;
+                SaveToFile(_currentFilePath);
             }
         }
+
+        // Метод сохранения содержимого RichTextBox в файл
+        private void SaveToFile(string filePath)
+        {
+            try
+            {
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
+                    range.Save(fileStream, DataFormats.Text); // Сохранение в текстовом формате
+                }
+                _isModified = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Отслеживание изменений в тексте
+        private void textEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _isModified = true;
+        }
+        
 
 
         private void Undo_Click(object sender, RoutedEventArgs e)
@@ -243,28 +328,85 @@ namespace Course_Work_Compiller
 
         private void AnalyzeText_Click(object sender, RoutedEventArgs e)
         {
-            ResultsArea.Text = "Синтаксический анализ завершен."; // Здесь можно добавить логику анализа текста
+            var lexer = new Lexer();
+            TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
+            try
+            {
+                var tokens = lexer.Analyze(range.Text);
+                ResultArea.ItemsSource = tokens;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+            
+            // ResultsArea.Ite = "Синтаксический анализ завершен."; // Здесь можно добавить логику анализа текста
         }
-
+        
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-            Window helpWindow = new Window
+            
+            string pdfFilePath = "руководство.pdf"; 
+            
+            // Получаем полный путь к файлу, используя текущую директорию программы
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pdfFilePath);
+            
+            // Проверяем, существует ли файл
+            if (File.Exists(fullPath))
             {
-                Title = "Справка",
-                Width = 600,
-                Height = 400,
-                Content = new ScrollViewer
+                try
                 {
-                    Content = new TextBlock
+                    // Открываем PDF файл с помощью ассоциированного приложения (например, браузера или PDF-просмотрщика)
+                    Process.Start(new ProcessStartInfo
                     {
-                        Text = "Меню\n\nМеню приложения содержит следующие разделы:\n\nФайл:\n\nСоздать – создать новый файл.\n\nОткрыть – открыть существующий файл.\n\nСохранить – сохранить текущий файл.\n\nВыход – закрыть приложение.\n\nПравка:\n\nОтменить – отменить последнее действие.\n\nПовторить – повторить отменённое действие.\n\nКопировать – скопировать выделенный текст.\n\nВырезать – вырезать выделенный текст.\n\nВставить – вставить скопированный текст.\n\nИнструменты:\n\nАнализ текста – выполнить анализ текста в редакторе.\n\nСправка:\n\nРуководство пользователя – открыть данное руководство.\n\nО программе – информация о разработчике и версии приложения.\n\nПанель инструментов\n\nПанель инструментов дублирует основные функции меню в виде кнопок с иконками:\n\nСоздать (карандаш)\n\nОткрыть (папка)\n\nСохранить (дискета)\n\nОтменить (стрелка назад)\n\nПовторить (стрелка вперёд)\n\nКопировать (документ)\n\nВырезать (ножницы)\n\nВставить (документ с текстом)\n\nАнализ текста (лупа)\n\n4. Использование\n\nОткрытие файла:\n\nВыберите \"Файл\" \u2192 \"Открыть\" или нажмите кнопку \"Открыть\" на панели инструментов.\n\nВыберите файл в проводнике и нажмите \"Открыть\".\n\nРедактирование текста:\n\nВнесите изменения в текстовом поле.\n\nИспользуйте функции \"Правка\" для редактирования.\n\nСохранение файла:\n\nВыберите \"Файл\" \u2192 \"Сохранить\" или нажмите кнопку \"Сохранить\".\n\nАнализ текста:\n\nНажмите \"Инструменты\" \u2192 \"Анализ текста\".\n\nРезультаты анализа отобразятся в нижней части окна.\n\nЗавершение работы\n\nДля выхода из приложения выберите \"Файл\" \u2192 \"Выход\" или закройте окно.\n\n",
-                        TextWrapping = TextWrapping.Wrap
-                    }
+                        FileName = fullPath,
+                        UseShellExecute = true // Используем систему для открытия файла
+                    });
                 }
-            };
-            helpWindow.Show();
-
+                catch (Exception ex)
+                {
+                    // Если возникает ошибка при открытии, выводим сообщение
+                    MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                // Если файл не найден
+                MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+        // private void Help_Click(object sender, RoutedEventArgs e)
+        // {
+        //     string pdfFilePath = "C:\\Users\\sasha\\RiderProjects\\Course_Work_Compiller\\Course_Work_Compiller\\руководство.pdf"; // Укажи путь к PDF документу
+        //
+        //     // Проверяем, существует ли файл
+        //     if (System.IO.File.Exists(pdfFilePath))
+        //     {
+        //         try
+        //         {
+        //             // Открываем PDF файл в браузере или другом приложении по умолчанию
+        //             Process.Start(new ProcessStartInfo
+        //             {
+        //                 FileName = pdfFilePath,
+        //                 UseShellExecute = true // Используем систему для открытия файла
+        //             });
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        //     }
+        // }
+
+
+       
+
         private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem)
@@ -275,19 +417,35 @@ namespace Course_Work_Compiller
                 {
                     // Изменяем размер шрифта в RichTextBox и TextBox
                     TextEditor.FontSize = selectedFontSize;
-                    ResultsArea.FontSize = selectedFontSize;
+                    ResultArea.FontSize = selectedFontSize;
                     LineNumbers.FontSize = selectedFontSize;
                 }
             }
         }
+        
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (ConfirmSaveChanges())
+            {
+                // Если пользователь выбрал "Да", закрываем приложение
+                base.OnClosing(e);  // Это вызовет стандартное закрытие окна
+            }
+            else
+            {
+                // Если выбрал "Нет", отменяем закрытие
+                e.Cancel = true;
+            }
+        }
+        
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Текстовый редактор версии 1.0", "О программе");
+            MessageBox.Show("Эта программа была разработана Суриковым Александром из группы АВТ-214.", "О программе");
         }
         
         
         private void InputFirst_TextChanged(object sender, TextChangedEventArgs e)
         {
+            _isModified = true;
             UpdateLineNumbers();
         }
         private void UpdateLineNumbers()
@@ -306,7 +464,11 @@ namespace Course_Work_Compiller
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (ConfirmSaveChanges()) 
+            {
+                this.Close();
+            }
+            
         }
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
