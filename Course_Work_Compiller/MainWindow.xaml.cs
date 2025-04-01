@@ -334,12 +334,29 @@ namespace Course_Work_Compiller
             {
                 var tokens = lexer.Analyze(range.Text);
                 ResultArea.ItemsSource = tokens;
+                foreach (var VARIABLE in tokens)
+                {
+                    Console.WriteLine(VARIABLE.Code);
+                    Console.WriteLine(VARIABLE.Lexeme);
+                }
+                tokens.RemoveAll(token => token.Code == 7);
+                Parser parser = new Parser(tokens);
+                try
+                {
+                    parser.Parse();
+                    Console.WriteLine("Парсинг успешно завершен!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка парсинга: {ex.Message}");
+                }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 throw;
             }
+            
             
             // ResultsArea.Ite = "Синтаксический анализ завершен."; // Здесь можно добавить логику анализа текста
         }
