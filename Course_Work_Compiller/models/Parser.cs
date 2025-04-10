@@ -4,11 +4,16 @@ using System.Linq;
 
 namespace Course_Work_Compiller.models
 {
+    public class ParseError
+    {
+        public string Результат { get; set; }
+        public string Тип { get; set; }
+    }
     public class Parser
     {
         private List<Token> _tokens;
         private int _currentIndex;
-        private List<string> _errors = new List<string>();
+        private List<ParseError> _errors = new List<ParseError>();
 
         public Parser(List<Token> tokens)
         {
@@ -16,11 +21,28 @@ namespace Course_Work_Compiller.models
             _currentIndex = 0;
         }
 
+        public List<ParseError> Errors
+        {
+            get => _errors;
+            set => _errors = value ?? throw new ArgumentNullException(nameof(value));
+        }
+        // public List<ParseError> Errors
+        // {
+        //     get => _errors;
+        //     set => _errors = value ?? throw new ArgumentNullException(nameof(value));
+        // }
+
         public void Parse()
         {
             ParseFunction();
-            if (_errors.Count == 0)
-                Console.WriteLine("Парсинг завершен успешно");
+            if (Errors.Count == 0)
+            {
+                Errors.Add(new ParseError 
+                {
+                    Результат = "Парсинг успешно завершен",
+                    Тип = "Информация"
+                });
+            }
             else
                 foreach (var error in _errors) Console.WriteLine(error);
         }
@@ -33,10 +55,13 @@ namespace Course_Work_Compiller.models
         private void AddError(string expected, Token actual)
         {
             if (actual == null) return;
-            _errors.Add($"Ошибка: Ожидалось {expected}, получено '{actual.Lexeme}' " +
-                       $"(Позиция: {actual.Position})");
+            // _errors.Add($"Ошибка: Ожидалось {expected}, получено '{actual.Lexeme}' " +
+            //            $"(Позиция: {actual.Position})");
+            Errors.Add(new ParseError(){
+                Результат = $"Ожидалось {expected}, получено '{actual.Lexeme}' (Позиция: {actual.Position})",
+                Тип = "Ошибка"
+            });
         }
-
         private bool Match(int expectedCode, string expectedName)
         {
             if (CurrentToken?.Code == expectedCode)
@@ -77,9 +102,13 @@ namespace Course_Work_Compiller.models
                 {
                     Fun_Name();
                 }
-                else if (CurrentToken?.Code == 9)
+                // else if (CurrentToken?.Code == 9)
+                // {
+                //     After_Fun_Name();
+                // }
+                else
                 {
-                    After_Fun_Name();
+                    Fun_Name();
                 }
             }
         }
@@ -98,6 +127,10 @@ namespace Course_Work_Compiller.models
                     ParseParameters();
                 }
                 else if (CurrentToken?.Code == 9)
+                {
+                    After_Fun_Name();
+                }
+                else
                 {
                     After_Fun_Name();
                 }
@@ -158,16 +191,28 @@ namespace Course_Work_Compiller.models
 
         private void Start_Body_Fun()
         {
-            if (Match(12, "'{'"))
+            if (CurrentToken.Code == 12)
             {
+                MoveNext();
+                ParseReturnStatement();
+            }
+            else if (CurrentToken.Code == 10 )
+            {
+                AddError("'{'", CurrentToken);
                 ParseReturnStatement();
             }
             else
             {
-                SkipUntil(new[] {6});
+                AddError("'{'", CurrentToken);
+                SkipUntil(new[] {6, 10});
                 if (CurrentToken?.Code == 6)
                 {
                     ParseReturnStatement();
+                }
+                
+                if (CurrentToken?.Code == 10)
+                {
+                    Expression_Block();
                 }
             }
         }
@@ -235,7 +280,7 @@ namespace Course_Work_Compiller.models
                 SkipUntil(new[] {2,3,4,5, 17, 11});
                 if (CurrentToken?.Code >= 2 && CurrentToken?.Code <= 5)
                 {
-                    ParseParameters();
+                    Param_Type();
                 }
                 else if (CurrentToken?.Code == 17)
                 {
@@ -307,9 +352,13 @@ namespace Course_Work_Compiller.models
                     if (CurrentToken?.Code != 17) break;
                     MoveNext();
                 }
-                else
+                else if (CurrentToken?.Code == 11)
                 {
                     After_Params();
+                }
+                else
+                {
+                    AddError("Ожидался идентификатор или скобка", CurrentToken);
                     break;
                 }
             }
@@ -323,10 +372,13 @@ namespace Course_Work_Compiller.models
             }
             else
             {
-                SkipUntil(new []{8});
+                SkipUntil(new []{8,2,3,4,5});
                 if (CurrentToken?.Code == 8)
                 {
                     Set_Type();
+                } else if (CurrentToken?.Code >= 2 && CurrentToken?.Code <= 5)
+                {
+                    Param_Type();
                 }
             }
         }

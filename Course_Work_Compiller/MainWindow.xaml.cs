@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -333,17 +334,19 @@ namespace Course_Work_Compiller
             try
             {
                 var tokens = lexer.Analyze(range.Text);
-                ResultArea.ItemsSource = tokens;
+                // ResultArea.ItemsSource = tokens;
                 foreach (var VARIABLE in tokens)
                 {
                     Console.WriteLine(VARIABLE.Code);
                     Console.WriteLine(VARIABLE.Lexeme);
                 }
+               
                 tokens.RemoveAll(token => token.Code == 7);
                 Parser parser = new Parser(tokens);
                 try
                 {
                     parser.Parse();
+                    ResultArea.ItemsSource = parser.Errors;
                     Console.WriteLine("Парсинг успешно завершен!");
                 }
                 catch (Exception ex)
