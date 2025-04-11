@@ -96,16 +96,12 @@ namespace Course_Work_Compiller.models
                 Fun_Name();
             }else
             {
-                SkipUntil(new[] {10,9});
+                // SkipUntil(new[] {10,9});
                 Console.WriteLine(CurrentToken.Code);
                 if (CurrentToken?.Code == 10)
                 {
                     Fun_Name();
                 }
-                // else if (CurrentToken?.Code == 9)
-                // {
-                //     After_Fun_Name();
-                // }
                 else
                 {
                     Fun_Name();
@@ -114,41 +110,55 @@ namespace Course_Work_Compiller.models
         }
         private void Fun_Name()
         {
-            if (Match(10, "Идентификатор функции"))
+            if (CurrentToken?.Code == 10)
             {
+                MoveNext();
                 After_Fun_Name();
             }
             else
             {
-                SkipUntil(new[] {10,9});
-                Console.WriteLine(CurrentToken.Code);
-                if (CurrentToken?.Code == 10)
-                {
-                    ParseParameters();
-                }
-                else if (CurrentToken?.Code == 9)
-                {
-                    After_Fun_Name();
-                }
-                else
-                {
-                    After_Fun_Name();
-                }
+                AddError("Идентификатор функции", CurrentToken);
+                MoveNext();
+                After_Fun_Name();
+                // SkipUntil(new[] {10,9});
+                // Console.WriteLine(CurrentToken.Code);
+                // if (CurrentToken?.Code == 10)
+                // {
+                //     ParseParameters();
+                // }
+                // else if (CurrentToken?.Code == 9)
+                // {
+                //     After_Fun_Name();
+                // }
+                // else
+                // {
+                //     After_Fun_Name();
+                // }
             }
         }
         private void After_Fun_Name()
         {
-            if (Match(9, "'('"))
+            if (CurrentToken?.Code == 9)
             {
+                MoveNext();
                 ParseParameters();
             }
             else
             {
-                SkipUntil(new[] {10,8});
+                AddError("'('", CurrentToken);
                 if (CurrentToken?.Code == 10)
                 {
                     ParseParameters();
                 }
+                else
+                {
+                    ParseParameters();
+                }
+                // SkipUntil(new[] {10,8});
+                // if (CurrentToken?.Code == 10)
+                // {
+                //     ParseParameters();
+                // }
             }
         }
         
@@ -172,82 +182,31 @@ namespace Course_Work_Compiller.models
         }
         private void Set_Return_Type()
         {
-            if (Match(8, "':'"))
+            if (CurrentToken?.Code == 8 )
             {
+                MoveNext();
                 Fun_Return_Type();
             }else
             {
-                SkipUntil(new[] {2,3,4,5,12});
-                if (CurrentToken?.Code >= 2 && CurrentToken?.Code <= 5)
-                {
-                    Fun_Return_Type();
-                }
-                else if (CurrentToken?.Code == 12)
-                {
-                    Start_Body_Fun();
-                }
+                AddError("Ожидалось : ", CurrentToken);
+                Fun_Return_Type();
             }
         }
 
         private void Start_Body_Fun()
         {
+            
             if (CurrentToken.Code == 12)
             {
                 MoveNext();
                 ParseReturnStatement();
             }
-            else if (CurrentToken.Code == 10 )
-            {
-                AddError("'{'", CurrentToken);
-                ParseReturnStatement();
-            }
             else
             {
-                AddError("'{'", CurrentToken);
-                SkipUntil(new[] {6, 10});
-                if (CurrentToken?.Code == 6)
+                if (!_tokens.Any(token => token.Code == 12))
                 {
+                    AddError("'{'", CurrentToken);
                     ParseReturnStatement();
-                }
-                
-                if (CurrentToken?.Code == 10)
-                {
-                    Expression_Block();
-                }
-            }
-        }
-
-        private void End()
-        {
-            int lengthHistory = _errors.Count;
-            Boolean result = Match(14, "';'");
-            
-            Console.WriteLine(_currentIndex);
-            if (result == true)
-            {
-                
-            }
-            else if (result == false && (lengthHistory == _errors.Count) )
-            {
-                Token endToken = new Token();
-                endToken.Code = 14;
-                endToken.Lexeme = "Пробел";
-                endToken.Position = $"{_currentIndex}";
-                AddError("Ожидался конец объявления функции ';'", endToken);
-            }
-        }
-        private void End_Body_Fun()
-        {
-            if (Match(13, "'}'"))
-            {
-                End();
-            }
-            else
-            {
-                SkipUntil(new[] {14});
-                if (CurrentToken?.Code == 14)
-                {
-                    End();
                 }
             }
         }
@@ -262,112 +221,82 @@ namespace Course_Work_Compiller.models
             else
             {
                 AddError("тип данных (Int, Double и т.д.)", CurrentToken);
-                SkipUntil(new []{12});
-                if (CurrentToken?.Code == 12)
-                {
-                    Start_Body_Fun();
-                }
+                MoveNext();
+                Start_Body_Fun();
             }
         }
         
         private void Set_Type()
         {
-            if (Match(8, "':'"))
+            if (CurrentToken?.Code == 8)
             {
+                MoveNext();
                 Param_Type();
-            }else
+            } else
             {
-                SkipUntil(new[] {2,3,4,5, 17, 11});
-                if (CurrentToken?.Code >= 2 && CurrentToken?.Code <= 5)
-                {
-                    Param_Type();
-                }
-                else if (CurrentToken?.Code == 17)
-                {
-                    Comma();
-                }
-                else if (CurrentToken?.Code == 11)
-                {
-                    After_Params();
-                }
+                AddError(":", CurrentToken);
+                Param_Type();
+                
             }
         }
-
         private void Comma()
         {
-            if (Match(17, "','"))
+            if (CurrentToken?.Code == 17)
             {
                 ParseParameter();
             }else
             {
-                SkipUntil(new[] {10});
-                if (CurrentToken.Code == 10)
+                if (CurrentToken?.Code == 11)
                 {
-                    ParseParameter();
+                    After_Params();
+                    return;
                 }
+                AddError("','", CurrentToken);
+                ParseParameter();
+                // SkipUntil(new[] {10});
+                // if (CurrentToken.Code == 10)
+                // {
+                //     ParseParameter();
+                // }
             }
         }
-
         private void Param_Type()
         {
             if (CurrentToken?.Code >= 2 && CurrentToken?.Code <= 5)
             {
-                Console.WriteLine($" Тип: {CurrentToken.Lexeme}");
                 MoveNext();
-                if (CurrentToken?.Code == 17)
-                {
-                    Comma();
-                }
-                else if (CurrentToken?.Code == 11)
-                {
-                    After_Params();
-                }
+                Comma();
             }
             else
             {
                 AddError("тип данных (Int, Double и т.д.)", CurrentToken);
-                SkipUntil(new []{17, 11, 8 });
-                if (CurrentToken?.Code == 17)
-                {
-                    Comma();
-                }
-                else if (CurrentToken?.Code == 11)
-                {
-                    After_Params();
-                }
-                else if (CurrentToken?.Code == 8)
-                {
-                    Set_Type();
-                }
+                MoveNext();
+                Comma();
             }
         }
-        
         private void ParseParameters()
         {
             while (true)
             {
-                if (CurrentToken?.Code == 10) // IDENT
+                if (CurrentToken?.Code == 10) 
                 {
                     ParseParameter();
                     if (CurrentToken?.Code != 17) break;
                     MoveNext();
                 }
-                else if (CurrentToken?.Code == 11)
-                {
-                    After_Params();
-                }
                 else
                 {
                     AddError("Ожидался идентификатор или скобка", CurrentToken);
+                    ParseParameter();
                     break;
                 }
             }
         }
-        
         private void ParseParameter()
         {
-            if (Match(10, "Параметр"))
+            if (CurrentToken?.Code == 10)
             {
+                MoveNext();
                 Set_Type();
             }
             else
@@ -382,171 +311,112 @@ namespace Course_Work_Compiller.models
                 }
             }
         }
-        
         private void ParseReturnStatement()
         {
             if (Match(6, "'return'"))
             {
-                // Space_After_Return();
                 Expression_Block();
             }
             else
             {
-                SkipUntil(new []{10,9, 16,18,19,20});
-                if (CurrentToken?.Code == 10)
-                {
-                    Expression_Block();
-                }
-                else if (CurrentToken?.Code == 9)
-                {
-                    Expression_Start_Bracket();
-                }
-                else if (CurrentToken?.Code != 17 && CurrentToken?.Code >= 16 && CurrentToken?.Code <= 20)
-                {
-                    AddError("Ожидался идентификатор или скобка", CurrentToken);
-                    Expression_Operator();
-                }
-            }
-            
-        }
-        private void Expression_Operator()
-        {
-            if (CurrentToken?.Code >= 16 && CurrentToken?.Code <= 20 && CurrentToken?.Code != 17)
-            {
-                MoveNext();
-                if (CurrentToken?.Code == 9)
-                {
-                    Expression_Start_Bracket();
-                }
-                else if (CurrentToken?.Code == 10)
-                {
-                    Expression_Parameter();
-                }
-                else
-                {
-                    AddError("начало приритетного выражение или идентификатор", CurrentToken);
-                }
-            }
-            else
-            {
-                AddError("оператор", CurrentToken);
-                SkipUntil(new[] {16,18,19,13,20,10});
-            }
-        }
-
-        private void Expression_Start_Bracket()
-        {
-            if(Match(9, "Начало приоритетного выражения"))
-            {
-                Expression_Parameter();
-            }
-            else
-            {
-                SkipUntil(new []{10});
-                if (CurrentToken?.Code == 10)
-                {
-                    Expression_Parameter();
-                }
-            }
-        }
-        private void Expression_End_Bracket()
-        {
-            if(Match(11, "Конец приоритетного выражения"))
-            {
-                if (CurrentToken?.Code >= 16 && CurrentToken?.Code <= 20 && CurrentToken?.Code != 17)
-                {
-                    Expression_Operator();
-                }
-                else if (CurrentToken?.Code == 13)
-                {
-                    End_Body_Fun();
-                }
-                else
-                {
-                    AddError("Ожидался завершение тела функции или оператор", CurrentToken);
-                }
-            }
-            else
-            {
-                SkipUntil(new []{13,16,18,19,20});
-            }
-        }
-        private void Expression_Parameter()
-        {
-            if (Match(10, "Идентификатор переменной"))
-            {
-                if (CurrentToken?.Code == 13)
-                {
-                    End_Body_Fun();
-                }
-                else if (CurrentToken?.Code >= 16 && CurrentToken?.Code <= 20 && CurrentToken?.Code != 17)
-                {
-                    Expression_Operator();
-                }
-                else if (CurrentToken?.Code == 11)
-                {
-                    Expression_End_Bracket();
-                }
-                else
-                {
-                    AddError("Ожидался оператор, завершение тела или скобка", CurrentToken);
-                }
-            }
-            else
-            {
-                SkipUntil(new []{16,18,19,20,13,11});
+                // SkipUntil(new []{10,9, 16,18,19,20});
+                Expression_Block();
             }
         }
         private void Expression_Block()
         {
-            if (CurrentToken?.Code == 9)
+            ParseExpression();
+            if (!_tokens.Any(token => token.Code == 13))
             {
-                Expression_Start_Bracket();
+                Token endToken = new Token();
+                endToken.Code = 13;
+                endToken.Lexeme = " ";
+                endToken.Position = $"{_currentIndex}";
+                AddError("Ожидался конец объявления функции '}'", endToken);
             }
-            else if (CurrentToken?.Code == 10)
+            if (!_tokens.Any(token => token.Code == 14))
             {
-                Expression_Parameter();
+                Token endToken = new Token();
+                endToken.Code = 14;
+                endToken.Lexeme = " ";
+                endToken.Position = $"{_currentIndex}";
+                AddError("Ожидался конец объявления функции ';'", endToken);
             }
-            else
-            {   
-                AddError("Ожидался идентификатор или скобка", CurrentToken);
-                SkipUntil(new []{9,10});
-                if (CurrentToken?.Code == 9)
-                {
-                    Expression_Start_Bracket();
-                }
-                else if (CurrentToken?.Code == 10)
-                {
-                    Expression_Parameter();
-                }
+            
+        }
+        // CurrentToken.Code != 13 && CurrentToken.Code != 14
+        private void ParseExpression()
+    {
+        while (CurrentToken != null && ( CurrentToken.Code == 11 
+                                         || CurrentToken.Code == 15 
+                                         || CurrentToken.Code == 9 
+                                         || CurrentToken.Code == 10 
+                                         || CurrentToken.Code == 16 
+                                         || CurrentToken.Code == 18 
+                                         || CurrentToken.Code == 19 
+                                         ||CurrentToken.Code == 20 ) ) // '}' или ';'
+        {
+            // Проверка на неожиданный токен (code == 15)
+            if (CurrentToken.Code == 15)
+            {
+                AddError("Неожиданный токен в выражении", CurrentToken);
+                MoveNext();
+                continue;
             }
+
+            switch (CurrentToken.Code)
+            {
+                case 9: // '('
+                    MoveNext();
+                    ParseExpression();
+                    if (!Match(11, "')'")) return;
+                    MoveNext();
+                    break;
+
+                case 10: // IDENT
+                         // Сохраняем предыдущий токен
+                    var prevToken = _currentIndex > 0 ? _tokens[_currentIndex - 1] : null;
+                    MoveNext();
+
+                    // Пропускаем проверку если следующий токен неожиданный (code == 15)
+                    if (CurrentToken != null && CurrentToken.Code != 15 &&
+                        (CurrentToken.Code == 10 || CurrentToken.Code == 9))
+                    {
+                        // Между двумя идентификаторами/числами/скобкой должен быть оператор
+                        AddError("Ожидался оператор между выражениями", CurrentToken);
+                    }
+                    break;
+
+                case 16:
+                case 18:
+                case 19:
+                case 20: // Операторы
+                    MoveNext();
+                    // Пропускаем проверку если следующий токен неожиданный (code == 15)
+                    if (CurrentToken != null && CurrentToken.Code != 15 &&
+                        CurrentToken.Code != 10 && CurrentToken.Code != 9)
+                    {
+                        AddError("Ожидалось выражение после оператора", CurrentToken);
+                    }
+                    break;
+
+                case 11: // ')'
+                    return;
+
+                default:
+                    AddError("Ожидалась часть выражения", CurrentToken);
+                    MoveNext();
+                    break;
+            }
+            
         }
         
-        // private void Space_After_Return()
-        // {
-        //     if (Match(7, "пробел после 'return'"))
-        //     {
-        //         Expression_Block();
-        //     }
-        //     else
-        //     {
-        //         SkipUntil(new []{10});
-        //         
-        //     }
-        // }
-        
+    }
         private void ParseFunction()
         {
            Fun();
         }
-
-        
-
-        
-
-        
-
-        
-
     }
 }
+
+

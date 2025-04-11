@@ -335,17 +335,22 @@ namespace Course_Work_Compiller
             {
                 var tokens = lexer.Analyze(range.Text);
                 // ResultArea.ItemsSource = tokens;
+                
+               
+                tokens.RemoveAll(token => token.Code == 7);
                 foreach (var VARIABLE in tokens)
                 {
                     Console.WriteLine(VARIABLE.Code);
                     Console.WriteLine(VARIABLE.Lexeme);
                 }
-               
-                tokens.RemoveAll(token => token.Code == 7);
                 Parser parser = new Parser(tokens);
                 try
                 {
                     parser.Parse();
+                    foreach (var VARIABLE in parser.Errors)
+                    {
+                        Console.WriteLine(VARIABLE);
+                    }
                     ResultArea.ItemsSource = parser.Errors;
                     Console.WriteLine("Парсинг успешно завершен!");
                 }
