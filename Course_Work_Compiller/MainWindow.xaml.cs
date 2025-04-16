@@ -372,34 +372,34 @@ namespace Course_Work_Compiller
         private void Help_Click(object sender, RoutedEventArgs e)
         {
             
-            string pdfFilePath = "руководство.pdf"; 
-            
-            // Получаем полный путь к файлу, используя текущую директорию программы
-            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pdfFilePath);
-            
-            // Проверяем, существует ли файл
-            if (File.Exists(fullPath))
-            {
-                try
-                {
-                    // Открываем PDF файл с помощью ассоциированного приложения (например, браузера или PDF-просмотрщика)
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = fullPath,
-                        UseShellExecute = true // Используем систему для открытия файла
-                    });
-                }
-                catch (Exception ex)
-                {
-                    // Если возникает ошибка при открытии, выводим сообщение
-                    MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                // Если файл не найден
-                MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            // string pdfFilePath = "руководство.pdf"; 
+            //
+            // // Получаем полный путь к файлу, используя текущую директорию программы
+            // string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pdfFilePath);
+            //
+            // // Проверяем, существует ли файл
+            // if (File.Exists(fullPath))
+            // {
+            //     try
+            //     {
+            //         // Открываем PDF файл с помощью ассоциированного приложения (например, браузера или PDF-просмотрщика)
+            //         Process.Start(new ProcessStartInfo
+            //         {
+            //             FileName = fullPath,
+            //             UseShellExecute = true // Используем систему для открытия файла
+            //         });
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         // Если возникает ошибка при открытии, выводим сообщение
+            //         MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            //     }
+            // }
+            // else
+            // {
+            //     // Если файл не найден
+            //     MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            // }
         }
 
         // private void Help_Click(object sender, RoutedEventArgs e)
