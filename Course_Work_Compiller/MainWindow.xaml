@@ -38,7 +38,7 @@
     <DockPanel Background="#D3D3D3">
         <Menu Background="#D3D3D3" DockPanel.Dock="Top">
             <MenuItem Header="{DynamicResource FileMenu}">
-                <MenuItem Header="{DynamicResource NewFile}" Icon="images/write.png" Click="NewFile_Click" />
+                <MenuItem Header="{DynamicResource NewFile}" Click="NewFile_Click" />
                 <MenuItem Header="{DynamicResource OpenFile}" Click="OpenFile_Click" />
                 <MenuItem Header="{DynamicResource SaveFile}" Click="SaveFile_Click" />
                 <MenuItem Header="{DynamicResource SaveAsFile}" Click="SaveFileAs_Click" />
@@ -52,6 +52,16 @@
                 <MenuItem Header="{DynamicResource Copy}" Click="Copy_Click" />
                 <MenuItem Header="{DynamicResource Cut}" Click="Cut_Click" />
                 <MenuItem Header="{DynamicResource Paste}" Click="Paste_Click" />
+            </MenuItem>
+            <MenuItem Header="Текст">
+                <MenuItem Header="Поставновка задачи"  Click="TextFileOpen_Click" />
+                <MenuItem Header="Грамматика" Click="TextFileOpen_Click" />
+                <MenuItem Header="Классификация грамматики" Click="TextFileOpen_Click" />
+                <MenuItem Header="Метод анализа" Click="TextFileOpen_Click" />
+                <MenuItem Header="Диагностика и нейтрализация ошибок" Click="TextFileOpen_Click" />
+                <MenuItem Header="Тестовый пример" Click="TextFileOpen_Click" />
+                <MenuItem Header="Список литературы" Click="TextFileOpen_Click" />
+                <MenuItem Header="Исходный код программы" Click="TextFileOpen_Click" />
             </MenuItem>
             <MenuItem Header="{DynamicResource ToolsMenu}">
                 <MenuItem Header="{DynamicResource AnalyzeText}" Click="AnalyzeText_Click" />

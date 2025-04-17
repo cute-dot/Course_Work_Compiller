@@ -23,6 +23,7 @@ namespace Course_Work_Compiller
     {
         private string _currentFilePath = null;
         private bool _isModified = false;
+        private readonly TextManager textManager = new TextManager();
         
         private bool _isUpdating = false;
         public static readonly RoutedCommand OpenFileCommand = new RoutedCommand();
@@ -523,5 +524,42 @@ namespace Course_Work_Compiller
             Application.Current.Resources.MergedDictionaries.Add(dict);
         }
 
+        private void TextFileOpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                switch (menuItem.Header.ToString())
+                {
+                    case "Поставновка задачи":
+                        textManager.OpenTaskStatement();
+                        break;
+                    case "Грамматика":
+                        textManager.OpenGrammar();
+                        break;
+                    case "Классификация грамматики":
+                        textManager.OpenGrammarClassification();
+                        break;
+                    case "Метод анализа":
+                        textManager.OpenAnalysisMethod();
+                        break;
+                    case "Диагностика и нейтрализация ошибок":
+                        textManager.OpenErrorDiagnostics();
+                        break;
+                    case "Тестовый пример":
+                        textManager.OpenTestExample();
+                        break;
+                    case "Список литературы":
+                        textManager.OpenBibliography();
+                        break;
+                    case "Исходный код программы":
+                        textManager.OpenSourceCode();;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
     }
+    
 }
