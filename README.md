@@ -87,6 +87,10 @@ fun calc(a: Int, b: Int, c: Int): Int {
  ![sleekshot](https://github.com/user-attachments/assets/eba8f069-2428-4633-8132-cebe3745c3d0)
  ![sleekshot](https://github.com/user-attachments/assets/0ec3c010-da7d-44e5-9b17-91d09483e8f6)
  ![{DB32EB1B-1B92-410C-BDB7-1AEDAA951490}](https://github.com/user-attachments/assets/e09284fd-32af-4791-b07c-4f7fe1af2ddd)
+ -Регулярные выражения
+ 1. Почтовый индекс : Regex(@"\b\d{3}[-\s]?\d{3}\b");
+ 2. Шетснадцатеричные числа: Regex(@"\b0[xX][0-9A-Fa-f]+\b");
+ 3. Электронная почта : Regex(@"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b");
 # Доп задание: 
 Автомат:
 ![ПОчтаАВтомат drawio](https://github.com/user-attachments/assets/d57d7a39-4b55-445c-b6ad-19bdf7602947)
