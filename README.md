@@ -82,6 +82,17 @@ fun calc(a: Int, b: Int, c: Int): Int {
 # Пример: 
 ![image](https://github.com/user-attachments/assets/22d576fa-806c-4b72-a551-9b0b5bb854ab)
 
+# Лаб 6:
+-Тестовый пример для каждого выражения:
+ ![sleekshot](https://github.com/user-attachments/assets/eba8f069-2428-4633-8132-cebe3745c3d0)
+ ![sleekshot](https://github.com/user-attachments/assets/0ec3c010-da7d-44e5-9b17-91d09483e8f6)
+ ![{DB32EB1B-1B92-410C-BDB7-1AEDAA951490}](https://github.com/user-attachments/assets/e09284fd-32af-4791-b07c-4f7fe1af2ddd)
+# Доп задание: 
+Автомат:
+
+-Тестовый пример: 
+![deepseek_mermaid_20250511_32ecee](https://github.com/user-attachments/assets/99af9152-a7cc-42e5-91cd-d48fd1e05819)
+
 
 
 
