@@ -89,9 +89,11 @@ fun calc(a: Int, b: Int, c: Int): Int {
  ![{DB32EB1B-1B92-410C-BDB7-1AEDAA951490}](https://github.com/user-attachments/assets/e09284fd-32af-4791-b07c-4f7fe1af2ddd)
 # Доп задание: 
 Автомат:
-
--Тестовый пример: 
 ![deepseek_mermaid_20250511_32ecee](https://github.com/user-attachments/assets/99af9152-a7cc-42e5-91cd-d48fd1e05819)
+-Тестовый пример: 
+![sleekshot](https://github.com/user-attachments/assets/45c3eb1b-11d0-4819-ad78-df50c44fb130)
+
+
 
 
 
