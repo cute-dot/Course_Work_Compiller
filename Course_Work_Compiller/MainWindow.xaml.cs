@@ -191,6 +191,87 @@ namespace Course_Work_Compiller
             TextEditor.Document.Blocks.Clear();;
             // ResultsArea.D;
         }
+        public class SearchResult
+        {
+            public string Тип { get; set; }
+            public string Результат { get; set; }
+        }
+        private void FindEmails_Click(object sender, RoutedEventArgs e)
+        {
+            string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
+            ResultArea.Items.Clear();
+    
+            Regex regex = new Regex(@"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b");
+    
+            MatchCollection matches = regex.Matches(text);
+    
+            if (matches.Count == 0)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Email", 
+                    Результат = "Адреса электронной почты не найдены" 
+                });
+                return;
+            }
+    
+            foreach (Match match in matches)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Email", 
+                    Результат = $"{match.Value} (позиция: {match.Index})" 
+                });
+            }
+        }
+        private void FindHexNumbers_Click(object sender, RoutedEventArgs e)
+        {
+            string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
+            ResultArea.Items.Clear();
+    
+            Regex regex = new Regex(@"\b0[xX][0-9A-Fa-f]+\b");
+    
+            MatchCollection matches = regex.Matches(text);
+    
+            if (matches.Count == 0)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Hex", 
+                    Результат = "Шестнадцатеричные числа не найдены" 
+                });
+                return;
+            }
+    
+            foreach (Match match in matches)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Hex", 
+                    Результат = $"{match.Value} (позиция: {match.Index})" 
+                });
+            }
+        }
+        private void FindPostalCodes_Click(object sender, RoutedEventArgs e)
+        {
+            string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
+            ResultArea.Items.Clear();
+            Regex regex = new Regex(@"\b\d{3}[-\s]?\d{3}\b");
+            MatchCollection matches = regex.Matches(text);
+            
+            if (matches.Count == 0)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Индекс", 
+                    Результат = "Российские почтовые индексы не найдены" 
+                });
+                return;
+            }
+            foreach (Match match in matches)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Индекс", 
+                    Результат = $"{match.Value} (позиция: {match.Index})" 
+                });
+            }
+        }
+
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -402,37 +483,6 @@ namespace Course_Work_Compiller
             //     MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             // }
         }
-
-        // private void Help_Click(object sender, RoutedEventArgs e)
-        // {
-        //     string pdfFilePath = "C:\\Users\\sasha\\RiderProjects\\Course_Work_Compiller\\Course_Work_Compiller\\руководство.pdf"; // Укажи путь к PDF документу
-        //
-        //     // Проверяем, существует ли файл
-        //     if (System.IO.File.Exists(pdfFilePath))
-        //     {
-        //         try
-        //         {
-        //             // Открываем PDF файл в браузере или другом приложении по умолчанию
-        //             Process.Start(new ProcessStartInfo
-        //             {
-        //                 FileName = pdfFilePath,
-        //                 UseShellExecute = true // Используем систему для открытия файла
-        //             });
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         MessageBox.Show("PDF файл не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        //     }
-        // }
-
-
-       
-
         private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem)

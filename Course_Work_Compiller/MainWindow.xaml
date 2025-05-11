@@ -70,6 +70,11 @@
                 <MenuItem Header="{DynamicResource UserGuide}" Click="Help_Click" />
                 <MenuItem Header="{DynamicResource About}" Click="About_Click" />
             </MenuItem>
+            <MenuItem Header="Регулярные выражения">
+                <MenuItem Header="Российский почтовый индекс" Click="FindPostalCodes_Click"></MenuItem>
+                <MenuItem Header="Шестнадцатеричные числа" Click="FindHexNumbers_Click"></MenuItem>
+                <MenuItem Header="Электронная почта" Click="FindEmails_Click"></MenuItem>
+            </MenuItem>
         </Menu>
 
         <!-- Панель инструментов -->
@@ -188,19 +193,10 @@
 
             <!-- Разделитель для изменения размеров окон -->
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="Gray"/>
-
-            <!-- <TextBox x:Name="ResultsArea" Grid.Row="2" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="DarkGray"/> -->
-            <!-- <DataGrid Grid.Row="2" Name="ResultsArea" AutoGenerateColumns="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Background="DarkGray"/> -->
             
             <DataGrid x:Name="ResultArea" Grid.Row="2" Margin="10" 
                       AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" Background="DarkGray"
                       IsReadOnly="True">
-                <!-- <DataGrid.Columns> -->
-                <!--     <DataGridTextColumn Header="Код" Binding="{Binding Code}"/> -->
-                <!--     <DataGridTextColumn Header="Тип" Binding="{Binding Type}"/> -->
-                <!--     <DataGridTextColumn Header="Лексема" Binding="{Binding Lexeme}"/> -->
-                <!--     <DataGridTextColumn Header="Позиция" Binding="{Binding Position}"/> -->
-                <!-- </DataGrid.Columns> -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Тип" Binding="{Binding Тип}" Width="100"/>
                     <DataGridTextColumn Header="Результат" Binding="{Binding Результат}" Width="*"/>
