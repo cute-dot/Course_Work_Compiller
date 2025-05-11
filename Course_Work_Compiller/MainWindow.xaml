@@ -74,6 +74,7 @@
                 <MenuItem Header="Российский почтовый индекс" Click="FindPostalCodes_Click"></MenuItem>
                 <MenuItem Header="Шестнадцатеричные числа" Click="FindHexNumbers_Click"></MenuItem>
                 <MenuItem Header="Электронная почта" Click="FindEmails_Click"></MenuItem>
+                <MenuItem Header="Электронная почта (автомат)" Click="FindEmailsWithAutomaton_Click"></MenuItem>
             </MenuItem>
         </Menu>
 

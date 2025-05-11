@@ -222,6 +222,33 @@ namespace Course_Work_Compiller
                 });
             }
         }
+        
+        private void FindEmailsWithAutomaton_Click(object sender, RoutedEventArgs e)
+        {
+            string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
+            ResultArea.Items.Clear();
+            EmailAutomation emailAutomation = new EmailAutomation();
+            var matches = emailAutomation.FindEmails(text);
+        
+            if (matches.Count == 0)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Email (автомат)", 
+                    Результат = "Адреса электронной почты не найдены" 
+                });
+                return;
+            }
+        
+            foreach (var match in matches)
+            {
+                ResultArea.Items.Add(new SearchResult { 
+                    Тип = "Email (автомат)", 
+                    Результат = $"{match.Value} (позиция: {match.Index})" 
+                });
+            }
+        }
+        
+        
         private void FindHexNumbers_Click(object sender, RoutedEventArgs e)
         {
             string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
@@ -248,6 +275,7 @@ namespace Course_Work_Compiller
                 });
             }
         }
+        
         private void FindPostalCodes_Click(object sender, RoutedEventArgs e)
         {
             string text = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd).Text;
