@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Course_Work_Compiller.models;
 using Microsoft.Win32;
+using RecursiveDescentParser;
 using Path = System.IO.Path;
 
 namespace Course_Work_Compiller
@@ -47,7 +49,10 @@ namespace Course_Work_Compiller
             InputBindings.Add(new KeyBinding(SaveFileCommand, Key.S, ModifierKeys.Control));
             InputBindings.Add(new KeyBinding(AnalyzeTextCommand, Key.F5, ModifierKeys.None));
             
-            
+            // ResultArea1.Resources["StatusOptions"] = new List<string>
+            // {
+            //     "KEYWORD", "ID", "CONST", "AO", "AS", "SEMICOLON", "EOF", "ERROR"
+            // };
         }
         
          private void TextEditor_TextChanged(object sender, TextChangedEventArgs e)
@@ -637,7 +642,47 @@ namespace Course_Work_Compiller
                 }
             }
         }
-        
+
+        private void Parse_Cycle(object sender, RoutedEventArgs e)
+        {
+            TextRange range = new TextRange(TextEditor.Document.ContentStart, TextEditor.Document.ContentEnd);
+            var lexer = new Lexer2();
+            var tokens = lexer.Analyze(range.Text);
+            var parser = new Parser2(lexer, range.Text);
+            parser.Parse();
+            var parserErrors = new List<ParseError>();
+            foreach (var error in parser.Errors) 
+            {
+                parserErrors.Add(new ParseError() { Результат = "Ошибка", Тип = error });
+            }
+            ResultArea.ItemsSource = parserErrors;
+            
+            var tokenItems = new ObservableCollection<TokenItem>();
+            foreach (var token in tokens)
+            {
+                if (token.Type != TokenType.EOF)
+                {
+                    tokenItems.Add(new TokenItem
+                    {
+                        Description = $"{token.Value} (позиция: {token.Position})",
+                        Status = token.Type.ToString()
+                    });
+                }
+            }
+            // ResultArea1.ItemsSource = tokenItems;
+        }
+        public class ParserErrorItem
+        {
+            public string Type { get; set; }
+            public string Result { get; set; }
+        }
+
+        // Модель для ResultArea2
+        public class TokenItem
+        {
+            public string Description { get; set; }
+            public string Status { get; set; }
+        }
     }
     
 }
