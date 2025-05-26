@@ -1,3 +1,37 @@
+# Лаба 8 Реализация метода рекурсивного спуска для синтаксического анализа.
+## Грамматика
+Вариант 9
+Для грамматики G[For] разработать и реализовать алгоритм
+анализа на основе метода рекурсивного спуска.
+```bnf
+1. <For> → for id := <Operand> to <Operand> do <Stmt> ;
+2. <Operand> → var | const
+3. <Stmt> → var = <ArithExpr>
+4. <ArithExpr> → <Operand> {ao <Operand>}
+```
+## Примечание:
+for, do, and, or – ключевые слова. В тип ao объединили
+арифметические операции + и -, в тип as оператор присваивания =, тип var
+– название переменной (только буквы), тип var – числа, тип id -
+идентификаторы (буквы и цифры). 
+
+## Классификация грамматики
+Согласно классификации Хомского, грамматика G[Выражение] является контекстно-свободной, так как имеет вид:
+A → α, где A∈VN, α∈V*.
+## Схема вызова
+![sleekshot](https://github.com/user-attachments/assets/31b410a8-039c-4428-aa55-159753144855)
+
+## Тестовые примеры
+![sleekshot](https://github.com/user-attachments/assets/94d4698c-6b33-4dec-821a-f46b03a05e0b)
+
+## Доп задание 
+- Был реализован алгоритм лексического анализа (лексемная декомпозиция и поиск лексических ошибок).
+![sleekshot](https://github.com/user-attachments/assets/e3e4984d-8f1f-4b9a-b1d4-b7150168ab67)
+![sleekshot](https://github.com/user-attachments/assets/724552da-7bf2-42b7-8b18-4b8cb5cb794d)
+![sdfadf drawio](https://github.com/user-attachments/assets/f1c4f2d8-ee0f-4ee5-ab2f-c90d2443a250)
+
+
+
 # Интерфейс приложения
 
 ## Меню
